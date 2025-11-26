@@ -18,6 +18,7 @@ sync-var sync # execute synchronization
 
 - `--help`, `-h` or just `sync-var`: display help
 - `--version`, `-v`: display version
+- `--config`, `-c`: path to config file
 - `sync` command options
   - `default`: create backup in the format of `xxx.bak.YYYYMMDDHHMMSS`
   - `--dry-run`: dry run
@@ -25,6 +26,8 @@ sync-var sync # execute synchronization
   - `--no-backup`: overwrite target files without creating backup files
 
 ### Config file format
+
+File paths must be absolute or relative to the configuration file.
 
 ```yaml
 tag_format: "[sync-var]" # default, regex "\[[0-9a-zA-Z_-]+\]", Case Insensitive
