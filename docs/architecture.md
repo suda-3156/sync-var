@@ -9,9 +9,9 @@
 - file path
   - @property file name
 - line num
-  - タグコメントの行番号
+  - マーカーコメントの行番号
   - @property target line num
-- raw tag comment line
+- raw marker comment line
   - strip していない生の行を保持する
   - @property template
   - @property env
@@ -52,7 +52,7 @@ indent3 = extract_indent(line3)  # "\t  " (タブ+2スペース)
 
 #### Config Class
 
-- tag format
+- marker
 - env list:
   - dict, holds master file path
 - target file paths
@@ -61,7 +61,7 @@ indent3 = extract_indent(line3)  # "\t  " (タブ+2スペース)
 
 #### Read master file/vars
 
-YAML、ENV 形式に対応するYAML は一旦階層構造なしで、純粋に変数を読み取る
+YAML、ENV 形式に対応する YAML は一旦階層構造なしで、純粋に変数を読み取る
 
 - 将来的に YAML の一階層に対応し、`xxx.yaml:default` や `xxx.yml:prod` で `default` 以下や `prod` 以下を参照できるようにする
 - 将来的に TOML、JSON にも対応する

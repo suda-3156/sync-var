@@ -30,7 +30,7 @@ sync-var sync # execute synchronization
 File paths must be absolute or relative to the configuration file.
 
 ```yaml
-tag_format: "[sync-var]" # default, regex "\[[0-9a-zA-Z_-]+\]", Case Insensitive
+marker: "[sync-var]" # default, regex "\[[0-9a-zA-Z_-]+\]", Case Insensitive
 
 master_files:
   - default: path/to/default/master/file.env # or .yaml, required
@@ -53,7 +53,7 @@ Case Insensitive.
 
 ### Comment prefixes
 
-- Lines starting with the symbols below will be searched for tags.
+- Lines starting with the symbols below will be searched for markers.
   `#`, `//`, `///`, `////`, `--`, `;`, `'`, `::`, `REM`, `*`, `%`, `@@`, `@`, `!`
 
 ## Future
