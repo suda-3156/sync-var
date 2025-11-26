@@ -1,0 +1,25 @@
+[project]
+name = "sync-var"
+version = "0.1.0"
+description = "Synchronize variables across files."
+readme = "README.md"
+authors = [
+    { name = "suda-3156", email = "116961611+suda-3156@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+sync-var = "sync_var.cli:root"
+
+[build-system]
+requires = ["uv_build>=0.9.11,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "isort>=7.0.0",
+    "pyright>=1.1.407",
+    "pytest>=9.0.1",
+    "ruff>=0.14.6",
+]
