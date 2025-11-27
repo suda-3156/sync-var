@@ -7,6 +7,7 @@ from rich.console import Console
 from sync_var import __version__
 from sync_var.config import load_config
 from sync_var.error import error_handle
+from sync_var.logging import setup_logging
 from sync_var.parse_master_var import parse_master_vars
 from sync_var.parse_target_var import parse_target_files
 from sync_var.replace import replace
@@ -36,9 +37,17 @@ def root(ctx: click.Context) -> None:
     default=None,
     help="Path to configuration file.",
 )
+@click.option(
+    "--verbose",
+    is_flag=True,
+    default=False,
+    help="Enable verbose logging output.",
+)
 @error_handle
-def init(config_path: str | None) -> None:
+def init(config_path: str | None, verbose: bool) -> None:
     """Create template sync-var.yaml for configuration."""
+    setup_logging(verbose)
+
     with Halo(text="Initializing configuration file...", spinner="dots") as spinner:
         _init_config_file(Path(config_path) if config_path else None)
         spinner.succeed("Configuration file initialized.")
@@ -54,18 +63,27 @@ def init(config_path: str | None) -> None:
     default=None,
     help="Path to configuration file.",
 )
+@click.option(
+    "--verbose",
+    is_flag=True,
+    default=False,
+    help="Enable verbose logging output.",
+)
 @error_handle
-def validate(config_path: str | None) -> None:
+def validate(config_path: str | None, verbose: bool) -> None:
     """Validate config file and master/target files."""
+    setup_logging(verbose)
 
     with Halo(text="Loading configuration...", spinner="dots") as spinner:
-        config = load_config(Path(config_path) if config_path else None)
+        config = load_config(
+            Path(config_path) if config_path else None,
+            verbose=verbose,
+        )
         spinner.succeed("Configuration loaded.")
 
     with Halo(text="Parsing master variable files...", spinner="dots") as spinner:
         master_vars = parse_master_vars(config.master_files)
         spinner.succeed("Master variable files parsed.")
-    pass
 
     with Halo(text="Parsing target files...", spinner="dots") as spinner:
         parse_target_files(config.target_files, config.marker, master_vars)
@@ -103,11 +121,22 @@ def validate(config_path: str | None) -> None:
     is_flag=True,
     help="Overwrite target files without creating backup files.",
 )
+@click.option(
+    "--verbose",
+    is_flag=True,
+    default=False,
+    help="Enable verbose logging output.",
+)
 @error_handle
 def sync(
-    config_path: str | None, dry_run: bool, output_dir: str | None, no_backup: bool
+    config_path: str | None,
+    dry_run: bool,
+    output_dir: str | None,
+    no_backup: bool,
+    verbose: bool,
 ) -> None:
     """Execute synchronization."""
+    setup_logging(verbose)
 
     with Halo(text="Loading configuration...", spinner="dots") as spinner:
         config = load_config(
@@ -115,6 +144,7 @@ def sync(
             dry_run=dry_run,
             output_dir=output_dir,
             no_backup=no_backup,
+            verbose=verbose,
         )
         spinner.succeed("Configuration loaded.")
 

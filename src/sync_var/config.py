@@ -35,6 +35,7 @@ class Config:
     marker: str = DEFAULT_MARKER
     config_file: str = DEFAULT_CONFIG_FILE
     save_options: SaveOptions = field(default_factory=SaveOptions)
+    verbose: bool = False
 
     def __post_init__(self) -> None:
         self.validate_config()
@@ -127,6 +128,7 @@ def load_config(
     dry_run: bool = False,
     output_dir: Optional[str] = None,
     no_backup: bool = False,
+    verbose: bool = False,
 ) -> Config:
     file_path = _find_config_file(config_path)
 
@@ -157,6 +159,7 @@ def load_config(
             output_dir=Path(output_dir) if output_dir else None,
             no_backup=no_backup,
         ),
+        verbose=verbose,
     )
 
 
