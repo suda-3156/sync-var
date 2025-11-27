@@ -1,5 +1,4 @@
-import re
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 from sync_var.logging import log
 from sync_var.parse_master_var import MasterVar
