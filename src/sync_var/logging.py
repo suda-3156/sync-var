@@ -1,20 +1,10 @@
 import logging
-import sys
 
 from rich.logging import RichHandler
 
-
-class HaloCompatibleHandler(RichHandler):
-    def emit(self, record: logging.LogRecord) -> None:
-        # output after clearing the spinner line
-        sys.stderr.write("\r\033[K")  # move cursor to start of line and clear line
-        sys.stderr.flush()
-        super().emit(record)
-
-
 FORMAT = "%(message)s"
 
-_handler = HaloCompatibleHandler(rich_tracebacks=True)
+_handler = RichHandler(rich_tracebacks=True)
 _handler.setFormatter(logging.Formatter(FORMAT, datefmt="[%X]"))
 
 log = logging.getLogger("sync_var")

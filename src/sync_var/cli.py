@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import click
-from halo import Halo
 from rich.console import Console
 
 from sync_var import __version__
@@ -12,6 +11,7 @@ from sync_var.parse_master_var import parse_master_vars
 from sync_var.parse_target_var import parse_target_files
 from sync_var.replace import replace
 from sync_var.save import save_target_files
+from sync_var.spinner import get_spinner
 
 console = Console(highlight=False)
 
@@ -47,8 +47,9 @@ def root(ctx: click.Context) -> None:
 def init(config_path: str | None, verbose: bool) -> None:
     """Create template sync-var.yaml for configuration."""
     setup_logging(verbose)
+    Spinner = get_spinner(verbose)
 
-    with Halo(text="Initializing configuration file...", spinner="dots") as spinner:
+    with Spinner(text="Initializing configuration file...") as spinner:
         _init_config_file(Path(config_path) if config_path else None)
         spinner.succeed("Configuration file initialized.")
 
@@ -73,19 +74,20 @@ def init(config_path: str | None, verbose: bool) -> None:
 def validate(config_path: str | None, verbose: bool) -> None:
     """Validate config file and master/target files."""
     setup_logging(verbose)
+    Spinner = get_spinner(verbose)
 
-    with Halo(text="Loading configuration...", spinner="dots") as spinner:
+    with Spinner(text="Loading configuration...") as spinner:
         config = load_config(
             Path(config_path) if config_path else None,
             verbose=verbose,
         )
         spinner.succeed("Configuration loaded.")
 
-    with Halo(text="Parsing master variable files...", spinner="dots") as spinner:
+    with Spinner(text="Parsing master variable files...") as spinner:
         master_vars = parse_master_vars(config.master_files)
         spinner.succeed("Master variable files parsed.")
 
-    with Halo(text="Parsing target files...", spinner="dots") as spinner:
+    with Spinner(text="Parsing target files...") as spinner:
         parse_target_files(config.target_files, config.marker, master_vars)
         spinner.succeed("Target files parsed.")
 
@@ -137,8 +139,9 @@ def sync(
 ) -> None:
     """Execute synchronization."""
     setup_logging(verbose)
+    Spinner = get_spinner(verbose)
 
-    with Halo(text="Loading configuration...", spinner="dots") as spinner:
+    with Spinner(text="Loading configuration...") as spinner:
         config = load_config(
             Path(config_path) if config_path else None,
             dry_run=dry_run,
@@ -148,17 +151,17 @@ def sync(
         )
         spinner.succeed("Configuration loaded.")
 
-    with Halo(text="Parsing master variable files...", spinner="dots") as spinner:
+    with Spinner(text="Parsing master variable files...") as spinner:
         master_vars = parse_master_vars(config.master_files)
         spinner.succeed("Master variable files parsed.")
 
-    with Halo(text="Parsing target files...", spinner="dots") as spinner:
+    with Spinner(text="Parsing target files...") as spinner:
         target_files = parse_target_files(
             config.target_files, config.marker, master_vars
         )
         spinner.succeed("Target files parsed.")
 
-    with Halo(text="Replacing variables in target files...", spinner="dots") as spinner:
+    with Spinner(text="Replacing variables in target files...") as spinner:
         replace(target_files, master_vars)
         spinner.succeed("Variables replaced in target files.")
 
@@ -166,7 +169,7 @@ def sync(
         console.print("\n[bold yellow]Dry run mode:[/bold yellow]")
         save_target_files(target_files, config.save_options)
     else:
-        with Halo(text="Saving target files...", spinner="dots") as spinner:
+        with Spinner(text="Saving target files...") as spinner:
             save_target_files(target_files, config.save_options)
             spinner.succeed("Target files saved.")
 
