@@ -1,4 +1,5 @@
 from typing import List
+
 from sync_var.parse_master_var import MasterVar
 from sync_var.parse_target_var import TargetFile, TargetLine
 

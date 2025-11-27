@@ -1,9 +1,10 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
-import re
 from typing import Dict, List
-from dotenv import dotenv_values
+
 import yaml
+from dotenv import dotenv_values
 
 
 @dataclass

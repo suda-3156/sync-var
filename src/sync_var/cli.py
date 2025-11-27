@@ -1,12 +1,12 @@
+from pathlib import Path
+
 import click
+from halo import Halo
 from rich.console import Console
 
 from sync_var import __version__
 from sync_var.config import load_config
 from sync_var.error import error_handle
-from pathlib import Path
-from halo import Halo
-
 from sync_var.parse_master_var import parse_master_vars
 from sync_var.parse_target_var import parse_target_files
 from sync_var.replace import replace

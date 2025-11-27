@@ -1,10 +1,9 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
-import re
-from typing import Optional, List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 from sync_var.parse_master_var import MasterVar
-
 
 COMMENT_PREFIX = [
     "#",

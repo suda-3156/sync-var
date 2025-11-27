@@ -1,12 +1,11 @@
-from dataclasses import dataclass, field
 import re
-from typing import Dict, Optional, Set
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Dict, Optional, Set
 
 import yaml
 
 from sync_var.utils import file_exists
-
 
 DEFAULT_MARKER = "[sync-var]"
 DEFAULT_CONFIG_FILE = "sync-var.yaml"
