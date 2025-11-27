@@ -1,5 +1,9 @@
 # Sync Var
 
+## TODO
+
+- Currently, variable and environment names are case-sensitive. This should be changed to case-insensitive.
+
 ## Installation
 
 ```sh
