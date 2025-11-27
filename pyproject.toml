@@ -7,7 +7,13 @@ authors = [
     { name = "suda-3156", email = "116961611+suda-3156@users.noreply.github.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "click>=8.3.1",
+    "halo>=0.0.31",
+    "python-dotenv>=1.2.1",
+    "pyyaml>=6.0.3",
+    "rich>=14.2.0",
+]
 
 [project.scripts]
 sync-var = "sync_var.cli:root"

@@ -54,7 +54,9 @@ Case Insensitive.
 ### Comment prefixes
 
 - Lines starting with the symbols below will be searched for markers.
-  `#`, `//`, `///`, `////`, `--`, `;`, `'`, `::`, `REM`, `*`, `%`, `@@`, `@`, `!`
+  `#`, `//`, `///`, `////`, `--`, `;`, `'`, `::`, `REM`, `*`, `%`, `@`, `@@`, `!`, `<!--`
+
+> Note: Although `<!--` supports multi-line comment blocks, this tool only processes the line immediately following the marker. Therefore, directives must be written on a single line.
 
 ### Directive examples
 
@@ -82,3 +84,4 @@ GRANT CREATE ON old_db.* TO 'old_user'@'%';
 - Allow `.toml`, `.json` as master files
 - Add `fallback default` mode/configuration.
   - If `env.VAR_NAME` is not found in the master files, its value will default to `default.VAR_NAME`
+- Support comment block and warn if comment block has multiple lines.

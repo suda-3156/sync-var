@@ -4,11 +4,10 @@
 
 ### Class
 
-#### Target Variable Class
+#### Target Line Class
 
 - file path
-  - @property file name
-- line num
+- marker line num
   - マーカーコメントの行番号
   - @property target line num
 - raw marker comment line
@@ -19,7 +18,7 @@
 - raw target line
   - @property indent
   - @property content
-- processed target line
+- replaced target line
   - 処理後の結果を保持する
 
 ```py
@@ -46,7 +45,7 @@ indent3 = extract_indent(line3)  # "\t  " (タブ+2スペース)
 
 - source file path
 - env
-  - config ファイルで定義された環境のみ許可する
+  - config ファイルで定義された環境のみ許可する -> 環境とマスターファイルを同時に定義するので，問題が生じることはない
 - var_name
 - value
 
