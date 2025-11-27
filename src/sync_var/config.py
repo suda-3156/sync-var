@@ -106,7 +106,7 @@ class Config:
     @property
     def master_files(self) -> Dict[str, Path]:
         return {
-            name: _resolve_path(path, self.config_dir)
+            name.lower(): _resolve_path(path, self.config_dir)
             for name, path in self._master_files.items()
         }
 

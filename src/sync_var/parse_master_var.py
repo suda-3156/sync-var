@@ -11,7 +11,7 @@ from dotenv import dotenv_values
 class MasterVar:
     source_file: Path
     env: str
-    key: str
+    _key: str
     value: str
 
     def __post_init__(self) -> None:
@@ -29,6 +29,10 @@ class MasterVar:
             )
 
         return None
+
+    @property
+    def key(self) -> str:
+        return self._key.upper()
 
 
 def parse_master_vars(master_files: Dict[str, Path]) -> List[MasterVar]:
@@ -72,7 +76,7 @@ def _parse_master_env_file(path: Path, env: str) -> List[MasterVar]:
                 master_var = MasterVar(
                     source_file=path,
                     env=env,
-                    key=key,
+                    _key=key,
                     value=value,
                 )
             except ValueError as e:
@@ -106,7 +110,7 @@ def _parse_master_yaml_file(path: Path, env: str) -> List[MasterVar]:
             master_var = MasterVar(
                 source_file=path,
                 env=env,
-                key=key,
+                _key=key,
                 value=value,
             )
         except ValueError as e:

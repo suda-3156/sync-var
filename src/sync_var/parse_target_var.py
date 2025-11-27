@@ -150,7 +150,9 @@ def validate_target_lines(
     # Check if (env, key) pairs exists in master vars
     for target_line in target_lines:
         for env, key in target_line.target_vars:
-            if not any(mv.env == env and mv.key == key for mv in master_vars):
+            if not any(
+                mv.env == env.lower() and mv.key == key.upper() for mv in master_vars
+            ):
                 raise ValueError(
                     f"Variable '{key}' with environment '{env}' in target file "
                     f"at line {target_line.marker_line_number} "
