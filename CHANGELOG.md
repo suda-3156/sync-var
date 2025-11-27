@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/suda-3156/sync-var/compare/v0.1.0...v0.2.0) (2025-11-27)
+
+
+### Features
+
+* **core:** Make environment names and variable keys case-insensitive ([4c8c402](https://github.com/suda-3156/sync-var/commit/4c8c4026c5bab305dea8337bed82253af6c5acab))
+* **log:** Add verbose logging with --verbose flag ([dfad078](https://github.com/suda-3156/sync-var/commit/dfad078f241d7ec2af6f4244ffc76a088fd4b549))
+
 ## 0.1.0 (2025-11-27)
 
 
