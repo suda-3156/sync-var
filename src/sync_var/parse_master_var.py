@@ -20,12 +20,11 @@ class MasterVar:
         if not self.key:
             raise ValueError("Key cannot be empty.")
 
-        pattern = r"^\[[0-9a-zA-Z_-]+\]$"
+        pattern = r"^[0-9a-zA-Z_-]+$"
 
         if not re.match(pattern, self.key):
             raise ValueError(
-                "Invalid key format. Key must be enclosed in square brackets "
-                "and contain only alphanumeric characters, hyphens, or underscores."
+                "Invalid key format. Key must contain only alphanumeric characters, hyphens, or underscores."
             )
 
         return None
@@ -52,11 +51,11 @@ def parse_master_vars(master_files: Dict[str, Path]) -> List[MasterVar]:
 
 
 def _parse_master_file(path: Path, env: str) -> List[MasterVar]:
-    if path.suffix == ".env":
-        return _parse_master_env_file(path, env)
-
     if path.suffix in {".yaml", ".yml"}:
         return _parse_master_yaml_file(path, env)
+
+    if ".env" in path.name:
+        return _parse_master_env_file(path, env)
 
     raise ValueError(f"Unsupported master file format: {path.suffix} for file {path}.")
 
@@ -85,7 +84,7 @@ def _parse_master_env_file(path: Path, env: str) -> List[MasterVar]:
             errors.append(f"Value for key: {key} in {path} is None.")
 
     if errors:
-        raise ValueError("Errors while parsing .env file:\n" + "\n".join(errors))
+        raise ValueError("Errors while parsing *.env* file:\n" + "\n".join(errors))
 
     return master_vars
 
