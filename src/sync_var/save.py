@@ -13,21 +13,21 @@ console = Console(highlight=False)
 def save_target_files(
     target_files: List[TargetFile],
     options: SaveOptions,
-) -> None:
+) -> List[str]:
     if options.dry_run:
         _show_diff(target_files)
-        return
+        return []
 
     if options.output_dir:
-        _save_to_output_dir(target_files, options.output_dir)
-        return
+        logs = _save_to_output_dir(target_files, options.output_dir)
+        return logs
 
     if options.no_backup:
-        _overwrite_target_files(target_files, create_backup=False)
-        return
+        logs = _overwrite_target_files(target_files, create_backup=False)
+        return logs
 
-    _overwrite_target_files(target_files, create_backup=True)
-    return
+    logs = _overwrite_target_files(target_files, create_backup=True)
+    return logs
 
 
 def _show_diff(target_files: List[TargetFile]) -> None:
@@ -61,7 +61,9 @@ def _show_diff(target_files: List[TargetFile]) -> None:
 def _save_to_output_dir(
     target_files: List[TargetFile],
     output_dir: Path,
-) -> None:
+) -> List[str]:
+    logs: List[str] = []
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for target_file in target_files:
@@ -75,25 +77,31 @@ def _save_to_output_dir(
         output_path = output_dir / output_filename
         output_path.write_text(content, encoding="utf-8")
 
-        console.print(f"  Saved: [cyan]{output_path}[/cyan]")
+        logs.append(f"  Saved: [cyan]{output_path}[/cyan]")
+
+    return logs
 
 
 def _overwrite_target_files(
     target_files: List[TargetFile],
     create_backup: bool,
-) -> None:
+) -> List[str]:
+    logs: List[str] = []
+
     for target_file in target_files:
         if not any(tl.replaced_target_line for tl in target_file.target_lines):
             continue
 
         if create_backup:
             backup_path = _create_backup(target_file.path)
-            console.print(f"  Backup: [dim]{backup_path}[/dim]")
+            logs.append(f"  Backup: [dim]{backup_path}[/dim]")
 
         content = _build_file_content(target_file)
         target_file.path.write_text(content, encoding="utf-8")
 
-        console.print(f"  Updated: [cyan]{target_file.path}[/cyan]")
+        logs.append(f"  Updated: [cyan]{target_file.path}[/cyan]")
+
+    return logs
 
 
 def _create_backup(file_path: Path) -> Path:

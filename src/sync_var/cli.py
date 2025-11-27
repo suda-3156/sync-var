@@ -168,10 +168,15 @@ def sync(
     if config.save_options.dry_run:
         console.print("\n[bold yellow]Dry run mode:[/bold yellow]")
         save_target_files(target_files, config.save_options)
-    else:
-        with Spinner(text="Saving target files...") as spinner:
-            save_target_files(target_files, config.save_options)
-            spinner.succeed("Target files saved.")
+        return
+
+    with Spinner(text="Saving target files...") as spinner:
+        logs = save_target_files(target_files, config.save_options)
+        spinner.succeed("Target files saved.")
+
+    console.print("Files edited:")
+    for log in logs:
+        console.print(log)
 
 
 def _init_config_file(config_path: Path | None) -> None:
