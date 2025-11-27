@@ -8,10 +8,10 @@
 
 - file path
 - marker line num
-  - マーカーコメントの行番号
+  - Line number of the marker comment
   - @property target line num
 - raw marker comment line
-  - strip していない生の行を保持する
+  - Holds the raw line without stripping
   - @property template
   - @property env
   - @property var_name
@@ -19,33 +19,33 @@
   - @property indent
   - @property content
 - replaced target line
-  - 処理後の結果を保持する
+  - Holds the result after processing
 
 ```py
-# インデントについて
-def extract_indent(line: str) -> str:
-    """行の先頭からインデント部分を抽出する"""
-    match = re.match(r'^(\s*)', line)
-    return match.group(1) if match else ''
+# Regarding indentation
+def extract_indent(line: str) -&gt; str:
+    &quot;&quot;&quot;Extracts the indent part from the beginning of a line&quot;&quot;&quot;
+    match = re.match(r&#x27;^(\s*)&#x27;, line)
+    return match.group(1) if match else &#x27;&#x27;
 
-# スペースインデント
-line1 = "    value: 123"
-indent1 = extract_indent(line1)  # "    " (4スペース)
+# Space indent
+line1 = &quot;    value: 123&quot;
+indent1 = extract_indent(line1)  # &quot;    &quot; (4 spaces)
 
-# タブインデント
-line2 = "\t\tvalue: 456"
-indent2 = extract_indent(line2)  # "\t\t" (2タブ)
+# Tab indent
+line2 = &quot;\t\tvalue: 456&quot;
+indent2 = extract_indent(line2)  # &quot;\t\t&quot; (2 tabs)
 
-# 混合インデント
-line3 = "\t  value: 789"
-indent3 = extract_indent(line3)  # "\t  " (タブ+2スペース)
+# Mixed indent
+line3 = &quot;\t  value: 789&quot;
+indent3 = extract_indent(line3)  # &quot;\t  &quot; (tab + 2 spaces)
 ```
 
 #### Master Variable Class
 
 - source file path
 - env
-  - config ファイルで定義された環境のみ許可する -> 環境とマスターファイルを同時に定義するので，問題が生じることはない
+  - Only allow environments defined in the config file -&gt; Since the environment and master file are defined at the same time, no problems will occur
 - var_name
 - value
 
@@ -60,24 +60,24 @@ indent3 = extract_indent(line3)  # "\t  " (タブ+2スペース)
 
 #### Read master file/vars
 
-YAML、ENV 形式に対応する YAML は一旦階層構造なしで、純粋に変数を読み取る
+Supports YAML and ENV formats. For now, YAML is read without hierarchical structure, purely reading variables.
 
-- 将来的に YAML の一階層に対応し、`xxx.yaml:default` や `xxx.yml:prod` で `default` 以下や `prod` 以下を参照できるようにする
-- 将来的に TOML、JSON にも対応する
+- In the future, support one level of hierarchy in YAML, allowing references to sections under `default` or `prod` with `xxx.yaml:default` or `xxx.yml:prod`.
+- In the future, also support TOML and JSON.
 
 #### collect target vars
 
-config で指定されたパスごとにファイルを読み取る
+Read files for each path specified in the config.
 
-マスターに登録されていない `{{ 環境.変数名 }}` があればエラーとする
+If a `{{ environment.variable_name }}` not registered in the master is found, it will be an error.
 
 #### replace
 
-テンプレートを実際の値で置換する
+Replace the template with the actual value.
 
 #### save (or show diffs in console)
 
-以下の情報を用いて差分表示または保存を行う:
+Perform diff display or save using the following information:
 
 - raw target line
 - processed target line
@@ -85,17 +85,19 @@ config で指定されたパスごとにファイルを読み取る
 
 ## Design
 
+### error handling
+
+Use a wrapper for error handling.
+
+- TODO:
+
 ### validation
 
-それぞれの処理について、validate → execute の順で実行する
-`validate` コマンドは各処理の validate のみを実行する
+For each process, execute in the order of validate → execute.
+The `validate` command executes only the validation of each process.
 
 ### logging, verbose option
 
-`rich.logging` を使用するデフォルトは warning 以上を表示
-必要な情報は `console.print()` で出力するため、info は表示しない
-`--verbose` オプション指定時は debug 以上を表示する
-
-### error handling
-
-エラーハンドリングには wrapper を使用する
+Use `rich.logging`. By default, display warnings and above.
+Necessary information is output with `console.print()`, so info is not displayed.
+When the `--verbose` option is specified, display debug and above.

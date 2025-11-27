@@ -64,16 +64,22 @@ Case Insensitive.
 server:
   # [sync-var] "api_key: {{ default.API_KEY }}"
   api_key: old_api_key
+  # will be:
+  api_key: new_api_key
 ```
 
 ```go
 // [sync-var] "const BACKEND_URL = \"{{ prod.BACKEND_URL }}\""
 const BACKEND_URL = "old.example.com"
+// will be:
+const BACKEND_URL = "new.example.com"
 ```
 
 ```sql
 -- [sync-var] "GRANT CREATE ON {{ DB_NAME }}.* TO '{{ DB_USERNAME }}'@'%';"
 GRANT CREATE ON old_db.* TO 'old_user'@'%';
+-- will be:
+GRANT CREATE ON new_db.* TO 'new_user'@'%';
 ```
 
 ## Future
@@ -85,3 +91,4 @@ GRANT CREATE ON old_db.* TO 'old_user'@'%';
 - Add `fallback default` mode/configuration.
   - If `env.VAR_NAME` is not found in the master files, its value will default to `default.VAR_NAME`
 - Support comment block and warn if comment block has multiple lines.
+- Support `--verbose` option for detailed logs.

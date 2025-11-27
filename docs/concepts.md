@@ -1,52 +1,52 @@
 # Concepts
 
-## sync-var とは
+## What is sync-var
 
-言語やディレクトリごとに存在する設定ファイルや、異なるファイル間で統一しておきたい変数を自動で同期するツール
+A tool that automatically syncs configuration files that exist for each language or directory, and variables that you want to keep consistent across different files.
 
-## 要件
+## Requirements
 
-- コメント行で次の行（厳密に次の行のみ）についての指示を行う
+- Instructions for the next line (strictly the next line only) are given in a comment line.
 
-### コマンド
+### Commands
 
-- `init`: config ファイルのサンプルを作成する
-- `validate`: config ファイルを元にファイルを読み取り、config ファイルとターゲットファイルの検証を行う
-- `sync`: 変数を同期する
-  - デフォルト動作: 上書き (overwrite)
-  - `--backup` オプション: バックアップを作成
-  - `--output-dir` オプション: 出力先ディレクトリを指定
-  - `--dry-run` オプション: 実際には変更せず、差分のみ表示
+- `init`: Create a sample config file.
+- `validate`: Read files based on the config file and validate the config file and target files.
+- `sync`: Sync variables.
+  - Default behavior: overwrite
+  - `--backup` option: Create a backup.
+  - `--output-dir` option: Specify the output directory.
+  - `--dry-run` option: Do not actually make changes, only display the differences.
 
-### config ファイル形式
+### Config File Format
 
-- ファイルパスを列挙する
-  - 将来的に階層構造による指定を許容する
-  - ワイルドカードにも対応予定
+- List file paths.
+  - Allow specification by hierarchical structure in the future.
+  - Wildcards will also be supported.
 - masterfiles:
-  - `default`: path/to/default/master/file（必須）
-  - その他、環境名とそのマスターファイルを列挙する（ここで環境を登録する）
+  - `default`: path/to/default/master/file (required)
+  - In addition, list environment names and their master files (register environments here).
 
-### 処理
+### Processing
 
-基本的に置換を行う。
+Basically, perform replacement.
 
-- インデントは別途保持する（タブ・スペース・数が異なる場合があるため）
-- テンプレート形式: `asdf {{ env.VAR_NAME }}`
-  - `{{ VAR_NAME }}` のように変数名のみの場合は `default` 環境を参照する
+- Indentation is preserved separately (as tabs, spaces, and their counts may differ).
+- Template format: `asdf {{ env.VAR_NAME }}`
+  - If only the variable name is present, like `{{ VAR_NAME }}`, it refers to the `default` environment.
 
-## 詳細
+## Details
 
-### ルール
+### Rules
 
-- 環境は config で指定されたもの + `default` のみ許容する
-  - `default` は環境名として使用できない（予約語）
-- `環境.VAR_NAME` は一意でなければならない（`環境.VAR_NAME` をキーとして同期を行う）
-- 環境名:
-  - 英数字、`-`、`_` を使用可能（大文字小文字を区別しない）
-- 変数名:
-  - 英数字、`-`、`_` を使用可能（大文字小文字を区別しない）
+- Only environments specified in the config + `default` are allowed.
+  - `default` cannot be used as an environment name (reserved word).
+- `environment.VAR_NAME` must be unique (syncing is performed using `environment.VAR_NAME` as the key).
+- Environment name:
+  - Alphanumeric characters, `-`, and `_` can be used (case-insensitive).
+- Variable name:
+  - Alphanumeric characters, `-`, and `_` can be used (case-insensitive).
 - value:
-  - 基本的に自由（Python パッケージでロードするため制限なし）
-- マーカー形式:
-  - `[]` で囲む。英数字、`-`、`_` を使用可能（大文字小文字を区別しない）
+  - Basically free (no restrictions as it is loaded by a Python package).
+- Marker format:
+  - Enclose in `[]`. Alphanumeric characters, `-`, and `_` can be used (case-insensitive).
