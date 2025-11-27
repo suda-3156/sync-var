@@ -541,3 +541,150 @@ class TestSaveOptions:
         assert config.save_options.output_dir == Path(output_dir)
         assert config.save_options.no_backup is True
         assert config.save_options.backup is False
+
+
+class TestPathResolution:
+    """Tests for relative path resolution based on config file location."""
+
+    def test_relative_paths_resolved_from_config_dir(self, tmp_path: Path) -> None:
+        """Relative paths should be resolved from config file's directory."""
+        # Structure:
+        # tmp_path/
+        #   config/
+        #     sync-var.yaml
+        #   data/
+        #     master.env
+        #     target.env
+
+        config_dir = tmp_path / "config"
+        data_dir = tmp_path / "data"
+        config_dir.mkdir()
+        data_dir.mkdir()
+
+        master_file = data_dir / "master.env"
+        target_file = data_dir / "target.env"
+        master_file.touch()
+        target_file.touch()
+
+        config_file = config_dir / "sync-var.yaml"
+        config_file.write_text(
+            dedent(
+                """\
+            master_files:
+              default: ../data/master.env
+            target_files:
+              - ../data/target.env
+        """
+            )
+        )
+
+        config = load_config(config_file)
+
+        assert config.master_files == {"default": master_file.resolve()}
+        assert config.target_files == {target_file.resolve()}
+
+    def test_absolute_paths_unchanged(self, tmp_path: Path) -> None:
+        """Absolute paths should remain unchanged."""
+        config_dir = tmp_path / "config"
+        config_dir.mkdir()
+
+        master_file = tmp_path / "master.env"
+        target_file = tmp_path / "target.env"
+        master_file.touch()
+        target_file.touch()
+
+        config_file = config_dir / "sync-var.yaml"
+        config_file.write_text(
+            dedent(
+                f"""\
+            master_files:
+              default: {master_file}
+            target_files:
+              - {target_file}
+        """
+            )
+        )
+
+        config = load_config(config_file)
+
+        assert config.master_files == {"default": master_file}
+        assert config.target_files == {target_file}
+
+    def test_mixed_absolute_and_relative_paths(self, tmp_path: Path) -> None:
+        """Config can have both absolute and relative paths."""
+        config_dir = tmp_path / "config"
+        data_dir = tmp_path / "data"
+        config_dir.mkdir()
+        data_dir.mkdir()
+
+        master_file = data_dir / "master.env"
+        target_file = data_dir / "target.env"
+        master_file.touch()
+        target_file.touch()
+
+        config_file = config_dir / "sync-var.yaml"
+        config_file.write_text(
+            dedent(
+                f"""\
+            master_files:
+              default: ../data/master.env
+            target_files:
+              - {target_file}
+        """
+            )
+        )
+
+        config = load_config(config_file)
+
+        assert config.master_files == {"default": master_file.resolve()}
+        assert config.target_files == {target_file}
+
+    def test_config_dir_property(self, tmp_path: Path) -> None:
+        """config_dir property returns the directory of the config file."""
+        config_dir = tmp_path / "nested" / "config"
+        config_dir.mkdir(parents=True)
+
+        master_file = config_dir / "master.env"
+        target_file = config_dir / "target.env"
+        master_file.touch()
+        target_file.touch()
+
+        config_file = config_dir / "sync-var.yaml"
+        config_file.write_text(
+            dedent(
+                """\
+            master_files:
+              default: master.env
+            target_files:
+              - target.env
+        """
+            )
+        )
+
+        config = load_config(config_file)
+
+        assert config.config_dir == config_dir.resolve()
+
+    def test_same_directory_relative_paths(self, tmp_path: Path) -> None:
+        """Relative paths in same directory as config file work correctly."""
+        master_file = tmp_path / "master.env"
+        target_file = tmp_path / "target.env"
+        master_file.touch()
+        target_file.touch()
+
+        config_file = tmp_path / "sync-var.yaml"
+        config_file.write_text(
+            dedent(
+                """\
+            master_files:
+              default: master.env
+            target_files:
+              - target.env
+        """
+            )
+        )
+
+        config = load_config(config_file)
+
+        assert config.master_files == {"default": master_file.resolve()}
+        assert config.target_files == {target_file.resolve()}

@@ -7,9 +7,6 @@ import yaml
 
 from sync_var.utils import file_exists
 
-# TODO:
-# - [ ] configファイルのあるディレクトリを基準に、master_filesやtarget_filesの相対パスを解決する機能
-
 
 DEFAULT_MARKER = "[sync-var]"
 DEFAULT_CONFIG_FILE = "sync-var.yaml"
@@ -87,13 +84,13 @@ class Config:
 
     def _files_exist(self) -> None:
         errors = []
-        for name, path in self._master_files.items():
+        for name, path in self.master_files.items():
             try:
                 file_exists(path)
             except FileNotFoundError as e:
                 errors.append(f"Master file '{name}': {e}")
 
-        for path in self._target_files:
+        for path in self.target_files:
             try:
                 file_exists(path)
             except FileNotFoundError as e:
@@ -103,12 +100,27 @@ class Config:
             raise ValueError("Configuration file errors:\n" + "\n".join(errors))
 
     @property
+    def config_dir(self) -> Path:
+        return Path(self.config_file).parent.resolve()
+
+    @property
     def master_files(self) -> Dict[str, Path]:
-        return {name: Path(path) for name, path in self._master_files.items()}
+        return {
+            name: _resolve_path(path, self.config_dir)
+            for name, path in self._master_files.items()
+        }
 
     @property
     def target_files(self) -> Set[Path]:
-        return {Path(path) for path in self._target_files}
+        return {_resolve_path(path, self.config_dir) for path in self._target_files}
+
+
+def _resolve_path(path: str | Path, base_dir: Path) -> Path:
+    p = Path(path)
+    # return absolute path as is
+    if p.is_absolute():
+        return p
+    return (base_dir / p).resolve()
 
 
 def load_config(
