@@ -1,6 +1,6 @@
 [project]
 name = "sync-var"
-version = "0.2.0"
+version = "0.2.1"
 description = "Synchronize variables across files."
 readme = "README.md"
 authors = [
