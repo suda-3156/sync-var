@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/suda-3156/sync-var/compare/v0.2.0...v0.2.1) (2025-11-28)
+
+
+### Bug Fixes
+
+* **sync_var:** Prevent showing diff for identical lines ([eb20226](https://github.com/suda-3156/sync-var/commit/eb20226d9861be99d95b98e511cdca5ce1aa127a))
+* **sync_var:** Unescape placeholders after variable replacement ([229b78a](https://github.com/suda-3156/sync-var/commit/229b78a4c5195b66b2c18f2e07c2edef72d8ae2b))
+
 ## [0.2.0](https://github.com/suda-3156/sync-var/compare/v0.1.0...v0.2.0) (2025-11-27)
 
 
