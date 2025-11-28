@@ -49,6 +49,8 @@ def _show_diff(target_files: List[TargetFile]) -> None:
             after = (
                 f"{target_line.target_line_indent}{target_line.replaced_target_line}"
             )
+            if before == after:
+                continue
 
             console.print(f"  Line {line_num}:")
             console.print(f"    [red]- {before}[/red]")
