@@ -56,6 +56,15 @@ def replace_target_lines(
                 )
                 log.debug(f"Replaced {{{{ {target_var[1]} }}}} with {master_var.value}")
 
+        # Unescape any escaped placeholders
+        replaced_line = (
+            replaced_line.replace(r"\{{", "{{")
+            .replace(r"\}}", "}}")
+            .replace(r"\.", ".")
+            .replace(r"\"", '"')
+            .replace(r"\\", "\\")
+        )
+
         log.debug(f"Final replaced line: {replaced_line}")
         target_line.replaced_target_line = replaced_line
 
