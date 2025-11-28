@@ -40,9 +40,7 @@ def _show_diff(target_files: List[TargetFile]) -> None:
         if not changes:
             continue
 
-        has_changes = True
-        console.print(f"\n[bold blue]{target_file.path}[/bold blue]")
-
+        logs = []
         for target_line in changes:
             line_num = target_line.target_line_number
             before = target_line.raw_target_line
@@ -52,12 +50,21 @@ def _show_diff(target_files: List[TargetFile]) -> None:
             if before == after:
                 continue
 
-            console.print(f"  Line {line_num}:")
-            console.print(f"    [red]- {before}[/red]")
-            console.print(f"    [green]+ {after}[/green]")
+            logs.append(f"  Line {line_num}:")
+            logs.append(f"    [red]- {before}[/red]")
+            logs.append(f"    [green]+ {after}[/green]")
+
+        console.print(f"\n[bold blue]{target_file.path}[/bold blue]")
+        if not logs:
+            console.print("  [yellow]No changes to apply.[/yellow]")
+            continue
+
+        has_changes = True
+        console.print("\n".join(logs))
 
     if not has_changes:
         console.print("[yellow]No changes to apply.[/yellow]")
+        return
 
 
 def _save_to_output_dir(
